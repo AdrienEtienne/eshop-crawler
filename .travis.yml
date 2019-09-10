@@ -3,16 +3,16 @@ node_js:
   - '10'
 jobs:
   include:
-    - stage: unit tests
-      name: tests
+    - stage: tests
+      name: unit tests
       script: npm run test:cov
-    - stage: unit tests
+    - stage: tests
       name: lint
       script: npm run lint
-    - stage: unit tests
+    - stage: tests
       name: e2e
       script: npm run test:e2e
-    - stage: unit tests
+    - stage: tests
       name: build
       script: npm run build
     - stage: deploy
