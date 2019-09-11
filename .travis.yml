@@ -15,13 +15,3 @@ jobs:
     - stage: tests
       name: build
       script: npm run build
-    - stage: deploy
-      name: deploy
-      script: npm --version
-    # - if: branch = master
-    #   stage: deploy to staging
-    #   script: skip
-    #   deploy: heroku
-    #     provider: heroku
-    #     app: eshop-crawler
-    #     api_key: $HEROKU_AUTH_TOKEN
