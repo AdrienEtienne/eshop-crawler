@@ -2,6 +2,7 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { AppModule } from './../src/app.module';
 import { INestApplication } from '@nestjs/common';
+import { getConnection } from 'typeorm';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -20,5 +21,10 @@ describe('AppController (e2e)', () => {
       .get('/')
       .expect(200)
       .expect({ result: 'Hello World!' });
+  });
+
+  afterAll(async () => {
+    await getConnection('default').close();
+    await app.close();
   });
 });
