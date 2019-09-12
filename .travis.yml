@@ -12,6 +12,8 @@ jobs:
     - stage: tests
       name: e2e
       script: npm run test:e2e
+      services:
+        - postgresql
     - stage: tests
       name: build
       script: npm run build
