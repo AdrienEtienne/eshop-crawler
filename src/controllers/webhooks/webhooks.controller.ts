@@ -1,18 +1,20 @@
-import { Controller, Get, Body, Module } from '@nestjs/common';
+import { Controller, Body, Module, Post } from '@nestjs/common';
 import { SuccessBodyDto, WebhookDto } from '../../dtos';
-import { logger } from '../../config';
+import { EshopServiceModule, EshopService } from '../../services/eshop.service';
 
-@Controller()
+@Controller('v1/webhooks')
 export class WebhooksController {
-  @Get('webhooks')
-  webhook(@Body() body: WebhookDto): SuccessBodyDto<undefined> {
+  constructor(private readonly eshop: EshopService) {}
+
+  @Post()
+  async webhook(@Body() body: WebhookDto): Promise<SuccessBodyDto<undefined>> {
     if (!body || !body.type || body.type !== 'sync') {
       return {
         result: undefined,
       };
     }
 
-    logger.log('process');
+    this.eshop.syncShops();
 
     return {
       result: undefined,
@@ -23,5 +25,6 @@ export class WebhooksController {
 // tslint:disable-next-line: max-classes-per-file
 @Module({
   controllers: [WebhooksController],
+  imports: [EshopServiceModule],
 })
 export class WebhooksModule {}

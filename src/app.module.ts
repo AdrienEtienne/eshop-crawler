@@ -3,6 +3,6 @@ import { DatabaseModule } from './db/database.module';
 import { ControllersModule } from './controllers';
 
 @Module({
-  imports: [ControllersModule, DatabaseModule],
+  imports: [DatabaseModule, ControllersModule],
 })
 export class AppModule {}
