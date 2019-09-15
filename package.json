@@ -17,7 +17,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "ts-node ./node_modules/.bin/typeorm"
+    "typeorm": "ts-node ./node_modules/.bin/typeorm",
+    "eshop": "ts-node ./eshop/all.ts",
+    "eshop:games": "ts-node ./eshop/games.ts",
+    "eshop:shops": "ts-node ./eshop/shops.ts"
   },
   "dependencies": {
     "@nestjs/common": "^6.5.3",
@@ -26,6 +29,7 @@
     "@nestjs/platform-express": "^6.5.3",
     "@nestjs/typeorm": "^6.1.3",
     "@nestjs/websockets": "^6.5.3",
+    "nintendo-switch-eshop": "^2.2.3",
     "pg": "^7.12.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.0",

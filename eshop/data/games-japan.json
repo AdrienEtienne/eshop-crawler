@@ -1,0 +1,32 @@
+[
+  {
+    "LinkURL": "https://ec.nintendo.com/JP/ja/titles/70010000002204",
+    "LinkTarget": "",
+    "ScreenshotImgURL": "",
+    "ThumbVariation": 70010000002204,
+    "ComingThumb": "yes",
+    "TitleName": "ファーミングシミュレーター Nintendo Switch Edition",
+    "TitleNameRuby": "ふぁーみんぐしゅみれーたーにんてんどーすいっちえでぃしょん",
+    "SoftType": "dl",
+    "D": 1513237492,
+    "SalesDateStr": "2017.12.14",
+    "MakerName": "オーイズミ・アミュージオ",
+    "Hard": "switch",
+    "Memo": ""
+  },
+  {
+    "LinkURL": "https://ec.nintendo.com/JP/ja/titles/70010000001467",
+    "LinkTarget": "",
+    "ScreenshotImgURL": "",
+    "ThumbVariation": 70010000001467,
+    "ComingThumb": "yes",
+    "TitleName": "遊んで将棋が強くなる！ 銀星将棋DX",
+    "TitleNameRuby": "あそんでしょうぎがつよくなるぎんせいしょうぎでらっくす",
+    "SoftType": "pkg_dl",
+    "D": 1513230559,
+    "SalesDateStr": "2017.12.14",
+    "MakerName": "シルバースタージャパン",
+    "Hard": "switch",
+    "Memo": ""
+  }
+]
