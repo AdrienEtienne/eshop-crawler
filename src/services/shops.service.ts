@@ -7,7 +7,7 @@ import { logger } from '../config';
 import { wait } from '../tools';
 
 @Injectable()
-export class EshopService {
+export class ShopsService {
   constructor(
     @InjectRepository(Shop)
     private readonly shops: Repository<Shop>,
@@ -75,7 +75,7 @@ export class EshopService {
 // tslint:disable-next-line: max-classes-per-file
 @Module({
   imports: [TypeOrmModule.forFeature([Shop])],
-  providers: [EshopService],
-  exports: [EshopService],
+  providers: [ShopsService],
+  exports: [ShopsService],
 })
-export class EshopServiceModule {}
+export class ShopsServiceModule {}

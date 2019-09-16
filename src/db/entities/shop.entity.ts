@@ -3,8 +3,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
-  JoinColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,7 +13,6 @@ export class Shop extends BaseEntity {
   @PrimaryGeneratedColumn('uuid') id!: string;
 
   @CreateDateColumn({
-    name: 'created_at',
     type: 'timestamp',
     readonly: true,
     transformer: {
@@ -27,7 +24,6 @@ export class Shop extends BaseEntity {
   createdAt: Date = new Date();
 
   @UpdateDateColumn({
-    name: 'updated_at',
     type: 'timestamp',
     transformer: {
       from: (value: Date) => value,
@@ -37,7 +33,7 @@ export class Shop extends BaseEntity {
   })
   updatedAt!: Date;
 
-  @Column('varchar', { length: 2 })
+  @Column('varchar', { length: 2, unique: true })
   code: string;
 
   @Column('text')
