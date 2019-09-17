@@ -47,10 +47,7 @@ export class GamesService {
           await game.save();
           return game;
         } catch (error) {
-          logger.error(
-            `[KO] Sync game "${el.title}": ${error.message}`,
-            error.stack,
-          );
+          logger.error(`[KO] Sync game "${el.title}": ${error.message}`);
         }
       }),
     );
@@ -86,10 +83,7 @@ export class GamesService {
           await game.save();
           return game;
         } catch (error) {
-          logger.error(
-            `[KO] Sync game "${el.title}": ${error.message}`,
-            error.stack,
-          );
+          logger.error(`[KO] Sync game "${el.title}": ${error.message}`);
         }
       }),
     );
