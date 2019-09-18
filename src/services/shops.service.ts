@@ -13,16 +13,18 @@ export class ShopsService {
     private readonly shops: Repository<Shop>,
   ) {}
 
-  async syncShops(): Promise<Shop[]> {
+  async sync(): Promise<Shop[]> {
     let results: Shop[] = [];
 
     const eshops: nintendo.EShop[] = [];
+
+    logger.log(`Start sync Shops`);
 
     try {
       eshops.push(...(await nintendo.getShopsEurope()));
       logger.log(`[OK] Fetch Eshops Europe`);
     } catch (error) {
-      logger.error(`[KO] Fetch Eshops Europe`, error.trace);
+      logger.error(`[KO] Fetch Eshops Europe: ${error.message}`);
     }
 
     await wait(2);
@@ -31,7 +33,7 @@ export class ShopsService {
       eshops.push(...(await nintendo.getShopsAmerica()));
       logger.log(`[OK] Fetch Eshops America`);
     } catch (error) {
-      logger.error(`[KO] Fetch Eshops America`, error.trace);
+      logger.error(`[KO] Fetch Eshops America: ${error.message}`);
     }
 
     await wait(2);
@@ -65,7 +67,7 @@ export class ShopsService {
 
       logger.log(`[OK] Sync Eshops`);
     } catch (error) {
-      logger.error(`[KO] Sync Eshops`, error.trace);
+      logger.error(`[KO] Sync Eshops: ${error.message}`);
     }
 
     return results;

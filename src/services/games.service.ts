@@ -91,7 +91,7 @@ export class GamesService {
     logger.log(`[OK] Sync games America`);
   }
 
-  async syncGames() {
+  async sync() {
     await this.syncEuropeGames();
     await this.syncAmericaGames();
   }

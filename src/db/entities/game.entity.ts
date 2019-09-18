@@ -5,8 +5,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { kebabCase, merge } from 'lodash';
+import { Price } from './price.entity';
 
 @Entity({ name: 'games' })
 export class Game extends BaseEntity {
@@ -69,6 +71,9 @@ export class Game extends BaseEntity {
   americaUrl: string | null;
   @Column('text', { nullable: true })
   japanUrl: string | null;
+
+  @OneToMany(type => Price, price => price.game)
+  prices: Price[];
 
   update(data: Partial<Game>) {
     merge(this, data);

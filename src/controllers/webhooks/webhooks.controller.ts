@@ -2,12 +2,17 @@ import { Controller, Body, Module, Post } from '@nestjs/common';
 import { SuccessBodyDto, WebhookDto } from '../../dtos';
 import { ShopsService, ShopsServiceModule } from '../../services/shops.service';
 import { GamesService, GamesServiceModule } from '../../services/games.service';
+import {
+  PricesService,
+  PricesServiceModule,
+} from '../../services/prices.service';
 
 @Controller('v1/webhooks')
 export class WebhooksController {
   constructor(
     private readonly shops: ShopsService,
     private readonly games: GamesService,
+    private readonly prices: PricesService,
   ) {}
 
   @Post()
@@ -18,8 +23,10 @@ export class WebhooksController {
       };
     }
 
-    this.shops.syncShops();
-    this.games.syncGames();
+    Promise.resolve()
+      .then(() => this.shops.sync())
+      .then(() => this.games.sync())
+      .then(() => this.prices.sync());
 
     return {
       result: undefined,
@@ -30,6 +37,6 @@ export class WebhooksController {
 // tslint:disable-next-line: max-classes-per-file
 @Module({
   controllers: [WebhooksController],
-  imports: [ShopsServiceModule, GamesServiceModule],
+  imports: [ShopsServiceModule, GamesServiceModule, PricesServiceModule],
 })
 export class WebhooksModule {}

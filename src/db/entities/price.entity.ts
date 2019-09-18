@@ -1,17 +1,19 @@
 import {
   BaseEntity,
-  Column,
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  OneToMany,
+  ManyToOne,
+  Column,
+  Unique,
 } from 'typeorm';
-import { Region } from 'nintendo-switch-eshop';
-import { Price } from './price.entity';
+import { Game } from './game.entity';
+import { Shop } from './shop.entity';
 
-@Entity({ name: 'shops' })
-export class Shop extends BaseEntity {
+@Entity({ name: 'prices' })
+@Unique(['game', 'shop'])
+export class Price extends BaseEntity {
   @PrimaryGeneratedColumn('uuid') id!: string;
 
   @CreateDateColumn({
@@ -35,18 +37,27 @@ export class Shop extends BaseEntity {
   })
   updatedAt!: Date;
 
-  @Column('varchar', { length: 2, unique: true })
-  code: string;
+  @ManyToOne(type => Game, game => game.prices)
+  game: Game;
+
+  @ManyToOne(type => Shop, shop => shop.prices)
+  shop: Shop;
 
   @Column('text')
-  country: string;
-
-  @Column('varchar')
   currency: string;
 
-  @Column('int2')
-  region: Region;
+  @Column('text')
+  amount: string;
 
-  @OneToMany(type => Price, price => price.shop)
-  prices: Price[];
+  @Column('real')
+  amountValue: number;
+
+  @Column('bool', { default: false })
+  onSale: boolean;
+
+  @Column('text', { nullable: true })
+  discountAmount: string | null;
+
+  @Column('real', { nullable: true })
+  discountAmountValue: number | null;
 }
