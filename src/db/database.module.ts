@@ -1,23 +1,15 @@
-import { Module, Logger } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { logger } from '../config';
+import * as config from './database.config';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import { DATABASE_URL, logger } from '../config';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       useFactory: () => {
-        logger.log(`Connection to database url ${DATABASE_URL}`);
-        return {
-          cli: {
-            migrationsDir: 'src/db/migration',
-          },
-          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-          migrations: [__dirname + '/migration/*{.ts,.js}'],
-          migrationsRun: true,
-          type: 'postgres',
-          url: DATABASE_URL,
-        } as PostgresConnectionOptions;
+        logger.log(`[OK] Connection to database url ${config.url}`);
+        return { ...config } as PostgresConnectionOptions;
       },
     }),
   ],

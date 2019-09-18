@@ -1,3 +1,3 @@
-export interface SuccessBody<T> {
+export interface SuccessBodyDto<T> {
   result: T;
 }
