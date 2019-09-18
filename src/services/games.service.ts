@@ -5,6 +5,7 @@ import * as nintendo from 'nintendo-switch-eshop';
 import { logger } from '../config';
 import { Game } from '../db/entities/game.entity';
 import { get } from 'lodash';
+import { MetaPagination } from '../dtos';
 
 @Injectable()
 export class GamesService {
@@ -12,13 +13,40 @@ export class GamesService {
     @InjectRepository(Game)
     private readonly games: Repository<Game>,
   ) {}
-
+  // Query
   async findOneByTitle(title: string) {
     return this.games.findOne({
       where: { titleSlug: Game.titleSlug(title) },
     });
   }
 
+  async search(
+    options: { pageCurrent?: number; pageItems?: number } = {},
+  ): Promise<{ games: Game[]; pagination: MetaPagination }> {
+    const { pageCurrent = 1, pageItems = 20 } = options;
+
+    const query = this.games.createQueryBuilder('game');
+
+    const results = await query
+      // Quote in order to have good case for column name
+      .orderBy('"titleSlug"', 'ASC')
+      .limit(pageItems)
+      .offset((pageCurrent - 1) * pageItems)
+      .getManyAndCount();
+    const games = results[0];
+    const count = results[1];
+
+    return {
+      games: results[0],
+      pagination: {
+        current: pageCurrent,
+        items: pageItems,
+        itemsTotal: count,
+      },
+    };
+  }
+
+  // Sync
   async syncEuropeGames() {
     let games: nintendo.GameEU[] = [];
 
