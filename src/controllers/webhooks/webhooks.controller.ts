@@ -1,5 +1,5 @@
-import { Controller, Body, Module, Post } from '@nestjs/common';
-import { SuccessBodyDto, WebhookDto } from '../../dtos';
+import { Controller, Module, Get } from '@nestjs/common';
+import { SuccessBodyDto } from '../../dtos';
 import { ShopsService, ShopsServiceModule } from '../../services/shops.service';
 import { GamesService, GamesServiceModule } from '../../services/games.service';
 import {
@@ -15,14 +15,8 @@ export class WebhooksController {
     private readonly prices: PricesService,
   ) {}
 
-  @Post()
-  async webhook(@Body() body: WebhookDto): Promise<SuccessBodyDto<undefined>> {
-    if (!body || !body.type || body.type !== 'sync') {
-      return {
-        result: undefined,
-      };
-    }
-
+  @Get('/sync')
+  async webhook(): Promise<SuccessBodyDto<undefined>> {
     Promise.resolve()
       .then(() => this.shops.sync())
       .then(() => this.games.sync())
