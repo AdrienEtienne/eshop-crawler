@@ -1,6 +1,6 @@
 import { Injectable, Module } from '@nestjs/common';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { Shop } from '../db/entities/shop.entity';
 import * as nintendo from 'nintendo-switch-eshop';
 import { logger } from '../config';
@@ -19,6 +19,10 @@ export class PricesService {
     @InjectRepository(Game)
     private readonly games: Repository<Game>,
   ) {}
+
+  find(options?: FindManyOptions<Price>) {
+    return this.prices.find(options);
+  }
 
   async sync() {
     const shops = await this.shops.find();

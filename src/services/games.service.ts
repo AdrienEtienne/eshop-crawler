@@ -1,24 +1,96 @@
 import { Injectable, Module } from '@nestjs/common';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import * as nintendo from 'nintendo-switch-eshop';
 import { logger } from '../config';
 import { Game } from '../db/entities/game.entity';
-import { get } from 'lodash';
+import { get, uniq } from 'lodash';
+import { MetaPagination } from '../dtos';
+import { Shop } from '../db/entities/shop.entity';
+import { Price } from '../db/entities/price.entity';
 
 @Injectable()
 export class GamesService {
   constructor(
     @InjectRepository(Game)
     private readonly games: Repository<Game>,
+    @InjectRepository(Shop)
+    private readonly shops: Repository<Shop>,
+    @InjectRepository(Price)
+    private readonly prices: Repository<Price>,
   ) {}
-
+  // Query
   async findOneByTitle(title: string) {
     return this.games.findOne({
       where: { titleSlug: Game.titleSlug(title) },
     });
   }
 
+  async search(
+    options: {
+      pageCurrent?: number;
+      pageItems?: number;
+      countries?: string;
+      sales?: boolean;
+    } = {},
+  ): Promise<{ games: Game[]; pagination: MetaPagination }> {
+    const {
+      pageCurrent = 1,
+      pageItems = 10,
+      countries = '',
+      sales = false,
+    } = options;
+
+    const query = this.games.createQueryBuilder('game');
+
+    let shops: Shop[] = [];
+    if (countries) {
+      const countryCodes = countries.split(',').map(el => el.toUpperCase());
+      if (countryCodes.length > 0) {
+        shops = await this.shops.find({ where: { code: In(countryCodes) } });
+      }
+    }
+
+    let gameIds: string[] = [];
+    if (shops.length > 0) {
+      try {
+        const prices = await this.prices.find({
+          where: {
+            shopId: In(shops.map(el => el.id)),
+            onSale: sales ? true : undefined,
+          },
+        });
+        gameIds = uniq(prices.map(el => el.gameId));
+      } catch (error) {
+        logger.error(error);
+      }
+    }
+
+    if (gameIds.length > 0) {
+      query.where('game.id IN (:...ids)', { ids: gameIds });
+    }
+
+    const results = await query
+      // Quote in order to have good case for column name
+      .orderBy('"titleSlug"', 'ASC')
+      .limit(pageItems)
+      .offset((pageCurrent - 1) * pageItems)
+      .getManyAndCount();
+
+    const games = results[0];
+    const count = results[1];
+
+    return {
+      games,
+      pagination: {
+        current: pageCurrent,
+        items: pageItems,
+        itemsTotal: count,
+      },
+    };
+  }
+
+  // Sync
   async syncEuropeGames() {
     let games: nintendo.GameEU[] = [];
 
@@ -99,7 +171,7 @@ export class GamesService {
 
 // tslint:disable-next-line: max-classes-per-file
 @Module({
-  imports: [TypeOrmModule.forFeature([Game])],
+  imports: [TypeOrmModule.forFeature([Game, Shop, Price])],
   providers: [GamesService],
   exports: [GamesService],
 })
