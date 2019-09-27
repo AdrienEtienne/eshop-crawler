@@ -37,10 +37,14 @@ export class Price extends BaseEntity {
   })
   updatedAt!: Date;
 
-  @ManyToOne(type => Game, game => game.prices)
+  @Column('text', { name: 'gameId' })
+  gameId: string;
+  @ManyToOne(type => Game, game => game.prices, { nullable: false })
   game: Game;
 
-  @ManyToOne(type => Shop, shop => shop.prices)
+  @Column('text', { name: 'shopId' })
+  shopId: string;
+  @ManyToOne(type => Shop, shop => shop.prices, { nullable: false })
   shop: Shop;
 
   @Column('text')

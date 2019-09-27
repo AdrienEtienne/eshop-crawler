@@ -18,8 +18,8 @@ export class WebhooksController {
   @Get('/sync')
   async webhook(): Promise<SuccessBodyDto<undefined>> {
     Promise.resolve()
-      .then(() => this.shops.sync())
-      .then(() => this.games.sync())
+      //   .then(() => this.shops.sync())
+      //   .then(() => this.games.sync())
       .then(() => this.prices.sync());
 
     return {
