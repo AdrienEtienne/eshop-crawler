@@ -152,8 +152,8 @@ export class PricesService {
 
         callback();
       },
-      // Concurrent limit found is 8, put 5 for safety
-      5,
+      // Concurrent limit found is 5, put 4 for safety
+      4,
     );
 
     games.forEach(game => q.push(game));
