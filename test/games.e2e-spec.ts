@@ -34,7 +34,7 @@ describe('Games Controller (e2e)', () => {
     const meta = body!.meta;
     expect(meta.pagination.current).toBe(1);
     expect(meta.pagination.items).toBe(10);
-    expect(meta.pagination.itemsTotal).toBeGreaterThan(1);
+    expect(meta.pagination.itemsTotal).toBeGreaterThan(0);
   });
 
   afterAll(async () => {
