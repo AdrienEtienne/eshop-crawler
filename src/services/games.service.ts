@@ -1,6 +1,6 @@
 import { Injectable, Module } from '@nestjs/common';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository, In, Brackets } from 'typeorm';
 import * as nintendo from 'nintendo-switch-eshop';
 import { logger } from '../config';
 import { Game } from '../db/entities/game.entity';
@@ -32,6 +32,7 @@ export class GamesService {
       pageItems?: number;
       countries?: string;
       sales?: boolean;
+      search?: string;
     } = {},
   ): Promise<{ games: Game[]; pagination: MetaPagination }> {
     const {
@@ -39,9 +40,21 @@ export class GamesService {
       pageItems = 10,
       countries = '',
       sales = false,
+      search,
     } = options;
 
     const query = this.games.createQueryBuilder('game');
+
+    if (search) {
+      query.where(
+        new Brackets(qb => {
+          const words = search.split(' ');
+          for (const word of words) {
+            qb.orWhere(`LOWER(game.title) LIKE '%${word.toLowerCase()}%'`);
+          }
+        }),
+      );
+    }
 
     let shops: Shop[] = [];
     if (countries) {
@@ -67,7 +80,7 @@ export class GamesService {
     }
 
     if (gameIds.length > 0) {
-      query.where('game.id IN (:...ids)', { ids: gameIds });
+      query.andWhere('game.id IN (:...ids)', { ids: gameIds });
     }
 
     const results = await query

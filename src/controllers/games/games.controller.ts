@@ -23,11 +23,14 @@ export class GamesController {
     countries: string,
     @Query('sales', new BooleanPipe({ defaultValue: false }))
     sales: boolean,
+    @Query('search')
+    search: string,
   ): Promise<SuccessBodyDto<any[]>> {
     const results = await this.games.search({
       pageCurrent,
       countries,
       sales,
+      search,
     });
 
     return {
