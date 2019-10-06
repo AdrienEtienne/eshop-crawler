@@ -33,7 +33,7 @@ describe('Games Controller (e2e)', () => {
     expect(games.length).toBeGreaterThan(0);
     const meta = body!.meta;
     expect(meta.pagination.current).toBe(1);
-    expect(meta.pagination.items).toBe(10);
+    expect(meta.pagination.items).toBe(20);
     expect(meta.pagination.itemsTotal).toBeGreaterThan(0);
   });
 

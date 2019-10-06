@@ -37,7 +37,7 @@ export class GamesService {
   ): Promise<{ games: Game[]; pagination: MetaPagination }> {
     const {
       pageCurrent = 1,
-      pageItems = 10,
+      pageItems = 20,
       countries = '',
       sales = false,
       search,
