@@ -7,6 +7,7 @@ import {
   PricesService,
   PricesServiceModule,
 } from '../../services/prices.service';
+import { SearchPipe, SearchPipeResult } from '../../pipes/Search.pipe';
 
 @Controller('v1/games')
 export class GamesController {
@@ -23,8 +24,8 @@ export class GamesController {
     countries: string,
     @Query('sales', new BooleanPipe({ defaultValue: false }))
     sales: boolean,
-    @Query('search')
-    search: string,
+    @Query('search', new SearchPipe())
+    search: SearchPipeResult,
   ): Promise<SuccessBodyDto<any[]>> {
     const results = await this.games.search({
       pageCurrent,
