@@ -8,6 +8,7 @@ import { get, uniq } from 'lodash';
 import { MetaPagination } from '../dtos';
 import { Shop } from '../db/entities/shop.entity';
 import { Price } from '../db/entities/price.entity';
+import { SearchPipeResult } from '../pipes/Search.pipe';
 
 @Injectable()
 export class GamesService {
@@ -32,7 +33,7 @@ export class GamesService {
       pageItems?: number;
       countries?: string;
       sales?: boolean;
-      search?: string;
+      search?: SearchPipeResult;
     } = {},
   ): Promise<{ games: Game[]; pagination: MetaPagination }> {
     const {
@@ -48,9 +49,8 @@ export class GamesService {
     if (search) {
       query.where(
         new Brackets(qb => {
-          const words = search.split(' ');
-          for (const word of words) {
-            qb.orWhere(`LOWER(game.title) LIKE '%${word.toLowerCase()}%'`);
+          for (const word of search.words) {
+            qb.andWhere(`LOWER(game.title) LIKE '%${word}%'`);
           }
         }),
       );
